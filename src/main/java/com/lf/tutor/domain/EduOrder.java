@@ -34,7 +34,16 @@ public class EduOrder {
     private List<TimeType> timeTypeList;
     private List<Techer> followTecherList;
     private String techerName;
+    private String studentName;
     private String isRecommend;
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
 
     public String getIsRecommend() {
         return isRecommend;

@@ -113,6 +113,13 @@ public class StudentController {
             resultDTO.setMsg("请先登录");
             return resultDTO;
         }
+        Student student = studentService.getStudentById(uId);
+        if("N".equals(student.getIsApprove())){
+            resultDTO = new ResultDTO();
+            resultDTO.setCode(ReturnCfg.ERROR_CODE);
+            resultDTO.setMsg("审核未通过不能发布订单！");
+            return resultDTO;
+        }
         resultDTO = new ResultDTO(ReturnCfg.SUCCESS_CODE, ReturnCfg.SUCCESS_MSG);
         order.setStudentId(Integer.valueOf(uId));
         eduOrderService.insert(order);

@@ -1,10 +1,7 @@
 package com.lf.tutor.Service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.lf.tutor.Service.CommonService;
-import com.lf.tutor.Service.EduOrderService;
-import com.lf.tutor.Service.TecherOrderService;
-import com.lf.tutor.Service.TecherService;
+import com.lf.tutor.Service.*;
 import com.lf.tutor.domain.EduOrder;
 import com.lf.tutor.domain.Grade;
 import com.lf.tutor.domain.Subject;
@@ -31,6 +28,8 @@ public class EduOrderServiceImpl implements EduOrderService {
     private TecherOrderService techerOrderService;
     @Autowired
     private TecherService techerService;
+    @Autowired
+    private StudentService studentService;
     @Override
     public void insert(EduOrder eduOrder) {
         eduOrderMapper.insert(eduOrder);
@@ -76,6 +75,7 @@ public class EduOrderServiceImpl implements EduOrderService {
                 //构建订单的教员姓名信息
                 result.get(i).setTecherName(techerService.getTecherById(String.valueOf(result.get(i).getTecherId())).getTecherName());
             }
+            result.get(i).setStudentName(studentService.getStudentById(result.get(i).getStudentId().toString()).getStudentName());
             //构建订单的已预约教员信息
             result.get(i).setFollowTecherList(techerOrderService.getTecherByOrderId(String.valueOf(result.get(i).getOrderId())));
         }
@@ -121,6 +121,7 @@ public class EduOrderServiceImpl implements EduOrderService {
             //构建订单的教员姓名信息
             result.setTecherName(techerService.getTecherById(String.valueOf(result.getTecherId())).getTecherName());
         }
+        result.setStudentName(studentService.getStudentById(result.getStudentId().toString()).getStudentName());
         //构建订单的已预约教员信息
         result.setFollowTecherList(techerOrderService.getTecherByOrderId(String.valueOf(result.getOrderId())));
         return result;
