@@ -44,7 +44,11 @@ public class TecherServiceImpl implements TecherService {
                     Grade grade = commonService.getGradeById(gradeStrList[j]);
                     gradeList.add(grade);
                 }
-                result.get(i).setGradeList(gradeList);
+                if(gradeList.size() == 0){
+                    result.get(i).setGradeList(null);
+                }else{
+                    result.get(i).setGradeList(gradeList);
+                }
             }
             if(result.get(i).getSubjectId() != null){
                 //构建科目信息
@@ -54,7 +58,11 @@ public class TecherServiceImpl implements TecherService {
                     Subject subject = commonService.getSubjectById(subjectStrList[j]);
                     subjectList.add(subject);
                 }
-                result.get(i).setSubjectList(subjectList);
+                if(subjectList.size() == 0){
+                    result.get(i).setSubjectList(null);
+                }else{
+                    result.get(i).setSubjectList(subjectList);
+                }
             }
             if(result.get(i).getTimeTypeId() != null){
                 //构建授课时间信息
@@ -64,7 +72,11 @@ public class TecherServiceImpl implements TecherService {
                     TimeType timeType = commonService.getTimeTypeById(timeTypeStrList[j]);
                     timeTypeList.add(timeType);
                 }
-                result.get(i).setTimeTypeList(timeTypeList);
+                if(timeTypeList.size() == 0){
+                    result.get(i).setTimeTypeList(null);
+                }else{
+                    result.get(i).setTimeTypeList(timeTypeList);
+                }
             }
             //设置头像请求路径
             result.get(i).setHeadImg("./getPhoto?imageType=1&uId="+result.get(i).getTecherId());
@@ -87,7 +99,11 @@ public class TecherServiceImpl implements TecherService {
                 Grade grade = commonService.getGradeById(gradeStrList[j]);
                 gradeList.add(grade);
             }
-            techer.setGradeList(gradeList);
+            if(gradeList.size() == 0){
+                techer.setGradeList(null);
+            }else{
+                techer.setGradeList(gradeList);
+            }
         }
         if(techer.getSubjectId() != null){
             //构建科目信息
@@ -97,7 +113,11 @@ public class TecherServiceImpl implements TecherService {
                 Subject subject = commonService.getSubjectById(subjectStrList[j]);
                 subjectList.add(subject);
             }
-            techer.setSubjectList(subjectList);
+            if(subjectList.size() == 0){
+                techer.setSubjectList(null);
+            }else{
+                techer.setSubjectList(subjectList);
+            }
         }
 
         if(techer.getTimeTypeId() != null){
@@ -108,7 +128,11 @@ public class TecherServiceImpl implements TecherService {
                 TimeType timeType = commonService.getTimeTypeById(timeTypeStrList[j]);
                 timeTypeList.add(timeType);
             }
-            techer.setTimeTypeList(timeTypeList);
+            if(timeTypeList.size() == 0){
+                techer.setTimeTypeList(null);
+            }else{
+                techer.setTimeTypeList(timeTypeList);
+            }
         }
         //设置头像请求路径
         techer.setHeadImg("./getPhoto?imageType=1&uId="+techerId);

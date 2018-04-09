@@ -49,7 +49,11 @@ public class EduOrderServiceImpl implements EduOrderService {
                     Grade grade = commonService.getGradeById(gradeStrList[j]);
                     gradeList.add(grade);
                 }
-                result.get(i).setGradeList(gradeList);
+                if(gradeList.size() == 0){
+                    result.get(i).setGradeList(null);
+                }else{
+                    result.get(i).setGradeList(gradeList);
+                }
             }
             if(result.get(i).getSubjectId() != null){
                 //构建订单的科目信息
@@ -59,7 +63,12 @@ public class EduOrderServiceImpl implements EduOrderService {
                     Subject subject = commonService.getSubjectById(subjectStrList[j]);
                     subjectList.add(subject);
                 }
-                result.get(i).setSubjectList(subjectList);
+                if(subjectList.size() == 0){
+                    result.get(i).setSubjectList(null);
+                }else{
+                    result.get(i).setSubjectList(subjectList);
+                }
+
             }
             if(result.get(i).getTimeTypeId() != null){
                 //构建订单的辅导时间信息
@@ -69,7 +78,11 @@ public class EduOrderServiceImpl implements EduOrderService {
                     TimeType timeType = commonService.getTimeTypeById(timeTypeStrList[j]);
                     timeTypeList.add(timeType);
                 }
-                result.get(i).setTimeTypeList(timeTypeList);
+                if(timeTypeList.size() == 0){
+                    result.get(i).setTimeTypeList(null);
+                }else{
+                    result.get(i).setTimeTypeList(timeTypeList);
+                }
             }
             if(result.get(i).getTecherId() != null){
                 //构建订单的教员姓名信息
@@ -95,7 +108,11 @@ public class EduOrderServiceImpl implements EduOrderService {
                 Grade grade = commonService.getGradeById(gradeStrList[j]);
                 gradeList.add(grade);
             }
-            result.setGradeList(gradeList);
+            if(gradeList.size() == 0){
+                result.setGradeList(null);
+            }else{
+                result.setGradeList(gradeList);
+            }
         }
         if(result.getSubjectId() != null){
             //构建订单的科目信息
@@ -105,7 +122,11 @@ public class EduOrderServiceImpl implements EduOrderService {
                 Subject subject = commonService.getSubjectById(subjectStrList[j]);
                 subjectList.add(subject);
             }
-            result.setSubjectList(subjectList);
+            if(subjectList.size() == 0){
+                result.setSubjectList(null);
+            }else{
+                result.setSubjectList(subjectList);
+            }
         }
         if(result.getTimeTypeId() != null){
             //构建订单的辅导时间信息
@@ -115,7 +136,11 @@ public class EduOrderServiceImpl implements EduOrderService {
                 TimeType timeType = commonService.getTimeTypeById(timeTypeStrList[j]);
                 timeTypeList.add(timeType);
             }
-            result.setTimeTypeList(timeTypeList);
+            if(timeTypeList.size() == 0){
+                result.setTimeTypeList(null);
+            }else{
+                result.setTimeTypeList(timeTypeList);
+            }
         }
         if(result.getTecherId() != null){
             //构建订单的教员姓名信息
