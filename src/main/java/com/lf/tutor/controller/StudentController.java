@@ -114,7 +114,7 @@ public class StudentController {
             return resultDTO;
         }
         Student student = studentService.getStudentById(uId);
-        if("N".equals(student.getIsApprove())){
+        if(student.getIsApprove() != null && "N".equals(student.getIsApprove())){
             resultDTO = new ResultDTO();
             resultDTO.setCode(ReturnCfg.ERROR_CODE);
             resultDTO.setMsg("审核未通过不能发布订单！");

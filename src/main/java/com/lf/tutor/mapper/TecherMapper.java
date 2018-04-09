@@ -22,7 +22,7 @@ public interface TecherMapper {
     @Insert("insert into techer(techer_id,techer_name,techer_sex,techer_age,techer_level_id,is_valid," +
             "score,institute_id,edu_level_id,edu_th_id,subject_id,grade_id,self_comment,time_type_id," +
             "created_date,updated_date,is_approve,phone,intro,exp) values(#{techerId},#{techerName},#{techerSex},#{techerAge},#{techerLevelId}," +
-            "'Y',5,#{instituteId},'1',#{eduThId},#{subjectId},#{gradeId},#{selfComment}," +
+            "'Y',3,#{instituteId},'1',#{eduThId},#{subjectId},#{gradeId},#{selfComment}," +
             "#{timeTypeId},now(),now(),'N',#{phone},#{intro},#{exp})")
     void insert(Techer techer);
 

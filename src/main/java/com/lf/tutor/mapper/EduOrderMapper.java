@@ -35,6 +35,7 @@ public interface EduOrderMapper {
             "<if test=\"status != null\">and status=#{status} </if>" +
             "<if test=\"isRecommend != null\">and is_recommend=#{isRecommend} </if>" +
             "<if test=\"studentSex != null\">and student_sex=#{studentSex} </if>" +
+            "<if test=\"studentId != null\">and student_id=#{studentId} </if>" +
             "<if test=\"techerSex != null\">and techer_sex=#{techerSex} </if>" +
             "<if test=\"subjectId != null\">and find_in_set(#{subjectId},subject_id)  </if>" +
             "<if test=\"gradeId != null\">and find_in_set(#{gradeId},grade_id)  </if>" +
