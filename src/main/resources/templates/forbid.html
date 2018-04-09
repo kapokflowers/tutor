@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css" />
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top" style="margin-bottom: 0px">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId == null}"><a href="/loginhtml">登录</a></li>
+            <li th:if="${userId == null}"><a href="/registerhtml"><span class="label label-info" style="font-size: 15px">注册</span></a></li>
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container" style="text-align: center;margin-top: 100px">
+      <img src="/img/forbid.jpg">
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="mycss/discuss.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId == null}"><a href="/loginhtml">登录</a></li>
+            <li th:if="${userId == null}"><a href="/registerhtml"><span class="label label-info" style="font-size: 15px">注册</span></a></li>
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <input type="hidden" id="hidden_order_id" th:value="${orderId}">
+    <div id="content" class="container" style="width: 70%">
+      <div>
+        <div class="thumbnail" >
+          <div class="row" style="background-color: #eee; margin: -5px -5px;padding-top: 10px">
+            <div class="col-sm-6" style="text-align: left">
+              <p>订单号：<span th:text="${order.orderId}">12345</span></p>
+            </div>
+            <div class="col-sm-6" style="text-align: right">
+              <p th:text="${order.createdDate}">2018-03-14 12:12:12</p>
+            </div>
+          </div>
+          <hr style="margin: 0px 0px 10px 0px">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>学生性别：<span th:text="${order.studentSexDesc}">男</span></p>
+              <p>学生年级：<span th:text="${order.gradeName}">五年级</span></p>
+              <p>辅导学科：
+                <span th:each="grade : ${order.gradeList}" th:text="${grade.gradeDesc}" class="label label-info" style="padding-left: 3px">英语</span>
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <p>教员性别：<span th:text="${order.techerSexDesc}">不限</span></p>
+              <p>授课地址：<span th:text="${order.address}">上海市闵行区康城幼儿园</span></p>
+            </div>
+          </div>
+          <hr style="margin: 5px 0">
+          <div class="row">
+            <div class="col-sm-10">
+              <p>期望辅导时间：
+                <span th:each="timetype : ${order.timeTypeList}" th:text="${timetype.timeTypeDesc}" class="label label-info" style="padding-left: 3px">周六上午</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <p style="text-align:  center">系统推荐人</p>
+      <div id="recommend_area">
+      </div>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 民师家教 版权所有——找家教，来民师家教</p>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //跳转教员详情页
+        function techerDetail(techerId) {
+            window.open("./techerdetailhtml?p="+techerId, "_blank");
+        }
+        //根据数据构造推荐教员
+        function makeContent(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+                var subjectHtml = "";
+                var gradeHtml = "";
+                if (data[i].subjectList != null) {
+                    for (var j = 0; j < data[i].subjectList.length; j++) {
+                        subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].subjectList[j].subjectName + "</span>"
+                    }
+                }
+                if (data[i].gradeList != null) {
+                    for (var j = 0; j < data[i].gradeList.length; j++) {
+                        gradeHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].gradeList[j].gradeDesc + "</span>"
+                    }
+                }
+                html += "<div class=\"thumbnail\" style=\"border-left: 3px solid #31b0d5\">\n" +
+                    "          <div class=\"row\">\n" +
+                    "            <div class=\"col-sm-2 text-center\">\n" +
+                    "              <img src=\"img/test_hp.jpg\" style=\"max-height:100px\">\n" +
+                    "              <p style=\"margin-bottom: 5px\">ID:"+data[i].techerId+"</p>\n" +
+                    "              <p style=\"margin-bottom: 5px\">"+data[i].techerLevelDesc+"</p>\n" +
+                    "              <button class=\"accept-btn btn btn-info\" onclick=\"accept("+data[i].techerId+")\">选TA</button>\n" +
+                    "            </div>\n" +
+                    "        <a href=\"#\" onclick=\"techerDetail("+data[i].techerId+")\" class=\"\">\n" +
+                    "            <div class=\"col-sm-10\">\n" +
+                    "              <p>\n" +
+                    "                <span style=\"font-size: 20px\">"+data[i].techerName+"</span>\n" +
+                    "                <span style=\"margin-left: 30px\">"+data[i].techerSexStr+"</span>\n" +
+                    "                <span style=\"margin-left:100px\">"+data[i].selfComment+"</span>\n" +
+                    "              </p>\n" +
+                    "              <p>"+data[i].eduThId+"级——"+data[i].eduLevelDesc+"——"+data[i].instituteDesc+"</p>\n" +
+                    "              <hr>\n" +
+                    "              <div class=\"row\">\n" +
+                    "                <div class=\"col-sm-6 text-center\">\n" +
+                    "                  <p>辅导年级</p>\n" +
+                    "                  <div>\n" + gradeHtml+
+                    "                  </div>\n" +
+                    "                </div>\n" +
+                    "                <div class=\"col-sm-6 text-center\">\n" +
+                    "                  <p>辅导学科</p>\n" +
+                    "                  <div>\n" + subjectHtml+
+                    "                  </div>\n" +
+                    "                </div>\n" +
+                    "              </div>\n" +
+                    "            </div>\n" +
+                    "        </a>\n" +
+                    "          </div>\n" +
+                    "      </div>";
+            }
+            $("#recommend_area").html(html);
+        }
+        //选择某个教员作为订单的教员
+        function accept(techerId) {
+            $.post("/admin/recommend/accept",{
+                techerId:techerId,
+                orderId:$("#hidden_order_id").val()
+            },function (data) {
+                alert(data.msg+",1s后关闭");
+                window.setTimeout(function () {
+                    window.close();
+                },1000)
+            })
+        }
+        $(document).ready(function() {
+            //获取推荐教员
+            $.post("/admin/recommend/techer",{
+                orderId:$("#hidden_order_id").val()
+            },function (data) {
+                if(data.code == "200"){
+                    makeContent(data.data);
+                }else{
+                    alert(data.msg)
+                }
+            })
+        })
+    </script>
+  </body>
+</html>

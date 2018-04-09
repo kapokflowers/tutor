@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="mycss/discuss.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li class="active"><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId == null}"><a href="/loginhtml">登录</a></li>
+            <li th:if="${userId == null}"><a href="/registerhtml"><span class="label label-info" style="font-size: 15px">注册</span></a></li>
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+    <div class="container" style="width: 70%">
+      <div style="text-align: right;margin-bottom: 5px">
+        <button class="btn btn-info" data-toggle="modal" data-target="#addCommentModal">创建帖子</button>
+      </div>
+
+      <div id="contentArea">
+      </div>
+      <nav aria-label="...">
+        <ul class="pager">
+          <li><a href="#" onclick="commentPageUp()">上一页</a></li>
+          <li><a href="#" onclick="commentPageDown()">下一页</a></li>
+        </ul>
+      </nav>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 民师家教 版权所有——找家教，来民师家教</p>
+      </div>
+    </footer>
+
+    <!-- 模态框示例（Modal） -->
+    <form class="form-horizontal" role="form" id="form_data"  style="margin: 20px;">
+      <div class="modal fade" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+              </button>
+              <h4 class="modal-title" id="myModalLabel">
+                发布新帖子
+              </h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal" role="form" style="height:100px;overflow:auto; ">
+                <div class="form-group">
+                  <label for="title" class="col-sm-3 control-label">帖子标题</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="title" name="title" value="" placeholder="请输入有吸引力的标题:)">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="content" class="col-sm-3 control-label">帖子内容</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control"  name="content" id="content" placeholder="请输入好玩的内容:)"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+              </button>
+              <button type="button" id="addCommentBtn" class="btn btn-info">
+                发布
+              </button><span id="tip"> </span>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+      </div>
+    </form>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //当前页码
+        var commentPage = 1;
+        //根据数据构建帖子列表
+        function makeDiscuss(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+                html += "<div class=\"thumbnail\" style=\"margin-bottom: 5px; border-left: 5px solid #31b0d5\">\n" +
+                    "        <div class=\"row\" style=\"height: 75px\">\n" +
+                    "          <div class=\"col-sm-11\">\n" +
+                    "            <a href=\"./discussdetailhtml?p="+data[i].commentId+"\"><p style=\"font-size: 15px;margin: 10px 5px\">"+data[i].title+"</p></a>\n" +
+                    "            <p style=\"margin: 10px 5px\">创建时间：<span style=\"margin-right: 50px\">"+data[i].createdDate+"</span>更新时间：<span>"+data[i].updatedDate+"</span></p>\n" +
+                    "          </div>\n" +
+                    "          <div class=\"col-sm-1\" style=\"background-color: #eeeeee;height:85px;text-align: center;margin: -5px -10px\">\n" +
+                    "            <p style=\"padding-top: 15px\">回复</p>\n" +
+                    "            <p>"+data[i].follow.length+"</p>\n" +
+                    "          </div>\n" +
+                    "        </div>\n" +
+                    "      </div>"
+            }
+            $("#contentArea").html(html);
+        }
+        //下一页
+        function commentPageDown() {
+            if($("#contentArea").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            commentPage++;
+            $.post("/i/comment/list",{
+                currentPage:commentPage,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeDiscuss(data.data);
+                }
+            });
+        }
+        //上一页
+        function commentPageUp() {
+            if(commentPage > 1){
+                commentPage--;
+                $.post("/i/comment/list",{
+                    currentPage:commentPage,
+                    pageSize:10
+                },function (data) {
+                    if(data.code == "200"){
+                        makeDiscuss(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        $(document).ready(function() {
+            //进页面后马上获取帖子数据
+            $.post("/i/comment/list",{
+                currentPage:1,
+                pageSize:10
+            },function (data) {
+              if(data.code == "200"){
+                  makeDiscuss(data.data);
+              }
+            });
+            //帖子发布按钮事件
+            $("#addCommentBtn").click(function () {
+                $.post("/i/comment/add",{
+                    title:$("#title").val(),
+                    content:$("#content").val()
+                },function (data) {
+                    if(data.code == "200"){
+                      makeDiscuss(data.data);
+                    }else{
+                        alert(data.msg);
+                    }
+                })
+            })
+        })
+    </script>
+  </body>
+</html>

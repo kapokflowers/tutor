@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="mycss/discuss.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId == null}"><a href="/loginhtml">登录</a></li>
+            <li th:if="${userId == null}"><a href="/registerhtml"><span class="label label-info" style="font-size: 15px">注册</span></a></li>
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <input type="hidden" id="hidden_order_id" th:value="${orderId}">
+    <input type="hidden" id="hidden_flag" th:value="${flag}">
+    <div id="content" class="container" style="width: 70%">
+
+    </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 民师家教 版权所有——找家教，来民师家教</p>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //跳至教员详情
+        function techerDetail(techerId) {
+            window.open("./techerdetailhtml?p="+techerId, "_blank");
+        }
+        //构造数据
+        function makeContent(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+                var subjectHtml = "";
+                var gradeHtml = "";
+                if (data[i].subjectList != null) {
+                    for (var j = 0; j < data[i].subjectList.length; j++) {
+                        subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].subjectList[j].subjectName + "</span>"
+                    }
+                }
+                if (data[i].gradeList != null) {
+                    for (var j = 0; j < data[i].gradeList.length; j++) {
+                        gradeHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].gradeList[j].gradeDesc + "</span>"
+                    }
+                }
+                html += "<div class=\"thumbnail\" style=\"border-left: 3px solid #31b0d5\">\n" +
+                    "        <a href=\"#\" onclick=\"techerDetail("+data[i].techerId+")\" class=\"\">\n" +
+                    "          <div class=\"row\">\n" +
+                    "            <div class=\"col-sm-2 text-center\">\n" +
+                    "              <img src=\"img/test_hp.jpg\" style=\"max-height:100px\">\n" +
+                    "              <p style=\"margin-bottom: 5px\">ID:"+data[i].techerId+"</p>\n" +
+                    "              <p style=\"margin-bottom: 5px\">"+data[i].techerLevelDesc+"</p>\n" +
+                    "              <button class=\"accept-btn btn btn-info\" onclick=\"accept("+data[i].techerId+")\">接受并试课</button>\n" +
+                    "            </div>\n" +
+                    "            <div class=\"col-sm-10\">\n" +
+                    "              <p>\n" +
+                    "                <span style=\"font-size: 20px\">"+data[i].techerName+"</span>\n" +
+                    "                <span style=\"margin-left: 30px\">"+data[i].techerSexStr+"</span>\n" +
+                    "                <span style=\"margin-left:100px\">"+data[i].selfComment+"</span>\n" +
+                    "                <span class=\"accept-label label label-success\" style=\"margin-left:100px\">"+data[i].statusDesc+"</span>\n" +
+                    "              </p>\n" +
+                    "              <p>"+data[i].eduThId+"级——"+data[i].eduLevelDesc+"——"+data[i].instituteDesc+"</p>\n" +
+                    "              <hr>\n" +
+                    "              <div class=\"row\">\n" +
+                    "                <div class=\"col-sm-6 text-center\">\n" +
+                    "                  <p>辅导年级</p>\n" +
+                    "                  <div>\n" + gradeHtml+
+                    "                  </div>\n" +
+                    "                </div>\n" +
+                    "                <div class=\"col-sm-6 text-center\">\n" +
+                    "                  <p>辅导学科</p>\n" +
+                    "                  <div>\n" + subjectHtml+
+                    "                  </div>\n" +
+                    "                </div>\n" +
+                    "              </div>\n" +
+                    "            </div>\n" +
+                    "          </div>\n" +
+                    "        </a>\n" +
+                    "      </div>";
+            }
+            $("#content").html(html);
+        }
+        //设置某个教员为订单的教员
+        function accept(techerId) {
+            $.post("/student/order/accept",{
+                techerId:techerId,
+                orderId:$("#hidden_order_id").val()
+            },function (data) {
+                if(data.code == "200"){
+                    makeContent(data.data);
+                    $("#hidden_flag").val("1");
+                    chanage();
+                }
+            })
+        }
+        //根据订单状态更改页面状态
+        function chanage() {
+            if($("#hidden_flag").val() == "1"){
+                $(".accept-btn").attr('disabled',true);
+                $(".accept-label[text='拒绝']").removeClass("label-success").addClass("label-danger");
+            }
+
+        }
+        $(document).ready(function() {
+            $.post("/student/unorder/techer/list",{
+                orderId:$("#hidden_order_id").val()
+            },function (data) {
+                if(data.code == "200"){
+                    makeContent(data.data);
+                    chanage()
+                }else{
+                    alert(data.msg)
+                }
+            })
+        })
+    </script>
+  </body>
+</html>

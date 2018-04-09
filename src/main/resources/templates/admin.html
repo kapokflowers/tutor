@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+    <!-- Custom styles for this template -->
+    <link href="mycss/person_techer.css" rel="stylesheet">
+    <link href="css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+    <div class="container" style="width: 70%">
+      <div class="row">
+        <div class="col-sm-2" style="background-color: #eeeeee;text-align: center;border-radius: 5px">
+          <ul class="nav nav-tab vertical-tab" role="tablist" id="vtab">
+            <li role="presentation" class="active">
+              <a href="#tab1" aria-controls="home" role="tab"
+                 data-toggle="tab"><b>教员审核</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab2" aria-controls="home" role="tab"
+                 data-toggle="tab"><b>学生审核</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab3" aria-controls="home" role="tab"
+                 data-toggle="tab"><b>推荐教员</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab4" aria-controls="inbox" role="tab"
+                 data-toggle="tab"><b>教员管理</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab5" aria-controls="inbox" role="tab"
+                 data-toggle="tab"><b>学生管理</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab6" aria-controls="inbox" role="tab"
+                 data-toggle="tab"><b>帖子管理</b></a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-10 tab-content vertical-tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab1">
+
+              <div id="techer_approve_area">
+              </div>
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="techerApprovePageUp()">上一页</a></li>
+                  <li><a href="#" onclick="techerApprovePageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+          <div role="tabpanel" class="tab-pane" id="tab2">
+
+            <div id="student_approve_area"></div>
+
+
+            <nav aria-label="...">
+              <ul class="pager">
+                <li><a href="#" onclick="studentApprovePageUp()">上一页</a></li>
+                <li><a href="#" onclick="studentApprovePageDown()">下一页</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="tab3">
+
+            <div id="recommend_area"></div>
+
+
+            <nav aria-label="...">
+              <ul class="pager">
+                <li><a href="#" onclick="recommendPageUp()">上一页</a></li>
+                <li><a href="#" onclick="recommendPageDown()">下一页</a></li>
+              </ul>
+            </nav>
+          </div>
+            <div role="tabpanel" class="tab-pane" id="tab4">
+
+              <div id="techer_area"></div>
+
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="techerPageUp()">上一页</a></li>
+                  <li><a href="#" onclick="techerPageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab5">
+
+              <div id="student_area"></div>
+
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="studentPageUp()">上一页</a></li>
+                  <li><a href="#" onclick="studentPageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab6">
+
+              <div id="comment_area"></div>
+
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="commentPageUp()">上一页</a></li>
+                  <li><a href="#" onclick="commentPageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 民师家教 版权所有——找家教，来民师家教</p>
+      </div>
+    </footer>
+
+    <!-- 模态框示例（Modal） -->
+    <input id="hidden_techer_id" type="hidden"/>
+    <form method="post" action="" class="form-horizontal" role="form" id="form_data" style="margin: 20px;">
+      <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 800px">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+              </button>
+              <h4 class="modal-title" id="myModalLabel">
+                教员信息
+              </h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal" role="form" style="height:100px;overflow:auto; ">
+                <div class="form-group">
+                  <label for="techer_img" class="col-sm-3 control-label">教员头像</label>
+                  <div class="col-sm-9">
+                    <img src="" id="techer_img" style="max-height:200px">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="techer_id" class="col-sm-3 control-label">教员ID</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="techer_id" name="techer_id" value="">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="techer_name" class="col-sm-3 control-label">教员姓名</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="user_name" value="" id="techer_name" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="institude" class="col-sm-3 control-label">教员学院</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="institude" id="institude">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="techer_id_img" class="col-sm-3 control-label">教员身份证</label>
+                  <div class="col-sm-9">
+                    <img src="" id="techer_id_img" style="max-width:500px">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="techer_sid_img" class="col-sm-3 control-label">教员学生证</label>
+                  <div class="col-sm-9">
+                    <img src="" id="techer_sid_img" style="max-width:500px">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+              </button>
+              <button type="button" id="techerApproveBtn" class="btn btn-primary">
+                通过
+              </button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+      </div>
+    </form>
+
+    <input id="hidden_student_id" type="hidden"/>
+    <form method="post" action="" class="form-horizontal" role="form" style="margin: 20px;">
+      <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+              </button>
+              <h4 class="modal-title">
+                学生信息
+              </h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal" role="form" style="height:100px;overflow:auto; ">
+
+                <div class="form-group">
+                  <label for="techer_id_img" class="col-sm-3 control-label">学生身份证</label>
+                  <div class="col-sm-9">
+                    <img src="" id="student_id_img" style="max-width:300px">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="student_address" class="col-sm-3 control-label">地址</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="student_address" value="" id="student_address" >
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+              </button>
+              <button type="button" id="studentApproveBtn" class="btn btn-primary">
+                通过
+              </button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+      </div>
+    </form>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/plugins/piexif.min.js" type="text/javascript"></script>
+    <script src="js/plugins/sortable.min.js" type="text/javascript"></script>
+    <script src="js/plugins/purify.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/fileinput.min.js"></script>
+    <script src="js/locales/zh.js"></script>
+    <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">
+        //教员审核页当前页码
+        var approvePage = 1;
+        //学生审核页当前页码
+        var studentApprovePage = 1;
+        //推荐页当前页码
+        var recommendPage = 1;
+        //教员页当前页码
+        var techerPage = 1;
+        //学生页当前页码
+        var studentPage = 1;
+        //评论页当前页码
+        var commentPage = 1;
+        //获取审核教员的个人信息
+        function getTecherApprove(techerId) {
+            $.post("/admin/techer/get",{
+                techerId:techerId
+            },function (data) {
+                if(data.code == "200"){
+                    $("#hidden_techer_id").val(data.data.techerId);
+                    $("#techer_id").val(data.data.techerId);
+                    $("#techer_name").val(data.data.techerName);
+                    $("#institude").val(data.data.instituteDesc);
+                    $('#techer_img').attr('src',data.data.headImg);
+                    $('#techer_id_img').attr('src',data.data.idImg);
+                    $('#techer_sid_img').attr('src',data.data.sIdImg);
+                    $("#addUserModal").modal("show");
+                }
+            })
+        }
+        //获取审核学生的个人信息
+        function getStudentApprove(studentId) {
+            $.post("/admin/student/get",{
+                studentId:studentId
+            },function (data) {
+                if(data.code == "200"){
+                    $("#hidden_student_id").val(data.data.studentId);
+                    $("#student_address").val(data.data.address);
+                    $('#student_id_img').attr('src',data.data.idImg);
+                    $("#studentModal").modal("show");
+                }
+            })
+        }
+        //删除教员
+        function delTecher(techerId) {
+            $.post("/admin/techer/delete",{
+                techerId:techerId
+            },function (data) {
+                if(data.code == "200"){
+                    makeTecher(data.data);
+                }
+            })
+        }
+        //删除学生
+        function delStudent(studentId) {
+            $.post("/admin/student/delete",{
+                studentId:studentId
+            },function (data) {
+                if(data.code == "200"){
+                    makeStudent(data.data);
+                }
+            })
+        }
+        //删除帖子
+        function delComment(commentId) {
+          $.post("/admin/comment/delete",{
+              commentId:commentId
+          },function (data) {
+              if(data.code == "200"){
+                  makeComment(data.data);
+              }
+          })
+        }
+        //根据数据构造教师审核列表
+        function makeTecherApprove(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+                html += "<div class=\"thumbnail\" style=\"margin-bottom: 5px; border-left: 5px solid #008000\">\n" +
+                    "                  <div class=\"row\" style=\"height: 45px;\">\n" +
+                    "                    <div class=\"col-sm-11\" style=\"padding-top: 5px\">\n" +
+                    "                      <a target='_blank' href=\"./techerdetailhtml?p="+data[i].techerId+"\">\n" +
+                    "                        <p style=\"font-size: 20px\">\n" +
+                    "                          <span style=\"margin-left: 10px\" class=\"label label-info\">ID:</span>\n" +
+                    "                          <span>"+data[i].techerId+"</span>\n" +
+                    "                          <b style=\"margin-left: 50px\">"+data[i].techerName+"</b>\n" +
+                    "                        </p>\n" +
+                    "                      </a>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-1\" style=\"background-color: #3CB371;height:55px;text-align: center;margin: -5px -10px\">\n" +
+                    "                      <p style=\"padding-top: 15px\"><a onclick=\"getTecherApprove("+data[i].techerId+")\" href=\"#\" style=\"color: #eeeeee\">查看</a></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                </div>";
+            }
+            $("#techer_approve_area").html(html);
+        }
+        //根据数据构造学生审核列表
+        function makeStudentApprove(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+                html += "<div class=\"thumbnail\" style=\"margin-bottom: 5px; border-left: 5px solid #008000\">\n" +
+                    "                  <div class=\"row\" style=\"height: 45px;\">\n" +
+                    "                    <div class=\"col-sm-11\" style=\"padding-top: 5px\">\n" +
+                    "                        <p style=\"font-size: 20px\">\n" +
+                    "                          <span style=\"margin-left: 10px\" class=\"label label-info\">ID:</span>\n" +
+                    "                          <span>"+data[i].studentId+"</span>\n" +
+                    "                          <b style=\"margin-left: 50px\">"+data[i].studentName+"</b>\n" +
+                    "                        </p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-1\" style=\"background-color: #3CB371;height:55px;text-align: center;margin: -5px -10px\">\n" +
+                    "                      <p style=\"padding-top: 15px\"><a onclick=\"getStudentApprove("+data[i].studentId+")\" href=\"#\" style=\"color: #eeeeee\">查看</a></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                </div>";
+            }
+            $("#student_approve_area").html(html);
+        }
+        //根据数据构造推荐列表
+        function makeRecommend(data){
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+                var subjectHtml = "";
+                var timeTypeHtml = "";
+                if (data[i].subjectList != null) {
+                    for (var j = 0; j < data[i].subjectList.length; j++) {
+                        subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].subjectList[j].subjectName + "</span>"
+                    }
+                }
+                if (data[i].timeTypeList != null) {
+                    for (var j = 0; j < data[i].timeTypeList.length; j++) {
+                        timeTypeHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].timeTypeList[j].timeTypeDesc + "</span>"
+                    }
+                }
+                html += "<div class=\"thumbnail\" >\n" +
+                    "                       <a target='_blank' href=\"./recommendhtml?p="+data[i].orderId+"\">\n" +
+                    "                    <div class=\"row\" style=\"background-color: #eee; margin: -5px -5px;padding-top: 10px\">\n" +
+                    "                      <div class=\"col-sm-6\" style=\"text-align: left\">\n" +
+                    "                        <p>订单号：<span>"+data[i].orderId+"</span></p>\n" +
+                    "                      </div>\n" +
+                    "                      <div class=\"col-sm-6\" style=\"text-align: right\">\n" +
+                        "<p>"+data[i].createdDate+"</p>" +
+                    "                      </div>\n" +
+                    "                    </div>\n" +
+                    "                    <hr style=\"margin: 0px 0px 10px 0px\">\n" +
+                    "                    <div class=\"row\">\n" +
+                    "                      <div class=\"col-sm-6\">\n" +
+                    "                        <p>学生性别：<span>"+data[i].studentSexDesc+"</span></p>\n" +
+                    "                        <p>学生年级：<span>"+data[i].gradeName+"</span></p>\n" +
+                    "                        <p>辅导学科：\n" + subjectHtml +
+                    "                        </p>\n" +
+                    "                      </div>\n" +
+                    "                      <div class=\"col-sm-6\">\n" +
+                    "                        <p>教员性别：<span>"+data[i].techerSexDesc+"</span></p>\n" +
+                    "                        <p>授课地址：<span>"+data[i].address+"</span></p>\n" +
+                    "                      </div>\n" +
+                    "                    </div>\n" +
+                    "                    <hr style=\"margin: 5px 0\">\n" +
+                    "                    <div class=\"row\">\n" +
+                    "                      <div class=\"col-sm-10\">\n" +
+                    "                        <p>期望辅导时间：\n" + timeTypeHtml +
+                    "                        </p>\n" +
+                    "                      </div>\n" +
+                    "                      <div class=\"col-sm-2\">\n" +
+                    "                        <p><span>"+data[i].followTecherList.length+"</span>位教员已投递</p>\n" +
+                    "                      </div>\n" +
+                    "                    </div>\n" +
+                    "                       </a>\n" +
+                    "                </div>";
+            }
+            $("#recommend_area").html(html);
+        }
+
+        //构建教师数据
+        function makeTecher(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+                html +="<div class=\"thumbnail\" style=\"margin-bottom: 5px; border-left: 5px solid #008000\">\n" +
+                    "                <div class=\"row\" style=\"height: 45px;\">\n" +
+                    "                  <div class=\"col-sm-11\" style=\"padding-top: 5px\">\n" +
+                    "                    <a target='_blank' href=\"./techerdetailhtml?p="+data[i].techerId+"\">\n" +
+                    "                      <p style=\"font-size: 20px\">\n" +
+                    "                        <span style=\"margin-left: 10px\" class=\"label label-info\">ID:</span>\n" +
+                    "                        <span>"+data[i].techerId+"</span>\n" +
+                    "                        <b style=\"margin-left: 50px\">"+data[i].techerName+"</b>\n" +
+                    "                      </p>\n" +
+                    "                    </a>\n" +
+                    "                  </div>\n" +
+                    "                  <div class=\"col-sm-1\" style=\"background-color: #FF6347;height:55px;text-align: center;margin: -5px -10px\">\n" +
+                    "                    <p style=\"padding-top: 15px;\"><a href=\"#\" onclick=\"delTecher("+data[i].techerId+")\" style=\"color: #eeeeee\">删除</a></p>\n" +
+                    "                  </div>\n" +
+                    "                </div>\n" +
+                    "              </div>";
+            }
+            $("#techer_area").html(html);
+        }
+        //构建学生数据
+        function makeStudent(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+              html+="<div class=\"thumbnail\" style=\"margin-bottom: 5px; border-left: 5px solid #008000\">\n" +
+                  "                <div class=\"row\" style=\"height: 45px;\">\n" +
+                  "                  <div class=\"col-sm-11\" style=\"padding-top: 5px\">\n" +
+                  "                    <a href=\"#\">\n" +
+                  "                      <p style=\"font-size: 20px\">\n" +
+                  "                        <span style=\"margin-left: 10px\" class=\"label label-info\">ID:</span>\n" +
+                  "                        <span>"+data[i].studentId+"</span>\n" +
+                  "                        <b style=\"margin-left: 50px\">"+data[i].studentName+"</b>\n" +
+                  "                      </p>\n" +
+                  "                    </a>\n" +
+                  "                  </div>\n" +
+                  "                  <div class=\"col-sm-1\" style=\"background-color: #FF6347;height:55px;text-align: center;margin: -5px -10px\">\n" +
+                  "                    <p style=\"padding-top: 15px;\"><a href=\"#\" onclick=\"delStudent("+data[i].studentId+")\" style=\"color: #eeeeee\">删除</a></p>\n" +
+                  "                  </div>\n" +
+                  "                </div>\n" +
+                  "              </div>";
+            }
+            $("#student_area").html(html);
+        }
+        //构建帖子数据
+        function makeComment(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+                html+="<div class=\"thumbnail\" style=\"margin-bottom: 5px; border-left: 5px solid #31b0d5\">\n" +
+                    "                <div class=\"row\" style=\"height: 75px\">\n" +
+                    "                  <div class=\"col-sm-11\">\n" +
+                    "                    <a target='_blank' href=\"./discussdetailhtml?p="+data[i].commentId+"\"><p style=\"font-size: 15px;margin: 10px 5px\">"+data[i].title+"</p></a>\n" +
+                    "                    <p style=\"margin: 10px 5px\">创建时间：<span style=\"margin-right: 50px\">"+data[i].createdDate+"</span>更新时间：<span>"+data[i].updatedDate+"</span></p>\n" +
+                    "                  </div>\n" +
+                    "                  <div class=\"col-sm-1\" style=\"background-color: #FF6347;height:85px;text-align: center;margin: -5px -10px\">\n" +
+                    "                    <p style=\"padding-top: 30px;\"><a href=\"#\" onclick=\"delComment("+data[i].commentId+")\" style=\"color: #eeeeee\">删除</a></p>\n" +
+                    "                  </div>\n" +
+                    "                </div>\n" +
+                    "              </div>";
+            }
+            $("#comment_area").html(html);
+        }
+        //教员审批下一页
+        function techerApprovePageDown() {
+            if($("#techer_approve_area").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            approvePage++;
+            $.post("/admin/approve/list",{
+                currentPage:approvePage,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeTecherApprove(data.data);
+                }
+            });
+        }
+        //教员审批上一页
+        function techerApprovePageUp() {
+            if(approvePage > 1){
+                approvePage--;
+                $.post("/admin/approve/list",{
+                    currentPage:approvePage,
+                    pageSize:10
+                },function (data) {
+                    if(data.code == "200"){
+                        makeTecherApprove(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //学生审批下一页
+        function studentApprovePageDown() {
+            if($("#student_approve_area").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            studentApprovePage++;
+            $.post("/admin/approve/student/list",{
+                currentPage:studentApprovePage,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeStudentApprove(data.data);
+                }
+            });
+        }
+        //学生审批上一页
+        function studentApprovePageUp() {
+            if(studentApprovePage > 1){
+                studentApprovePage--;
+                $.post("/admin/approve/student/list",{
+                    currentPage:studentApprovePage,
+                    pageSize:10
+                },function (data) {
+                    if(data.code == "200"){
+                        makeStudentApprove(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //推荐教员下一页
+        function recommendPageDown() {
+            if($("#recommend_area").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            recommendPage++;
+            $.post("/admin/recommend/list",{
+                currentPage:recommendPage,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeRecommend(data.data);
+                }
+            });
+        }
+        //推荐教员上一页
+        function recommendPageUp() {
+            if(recommendPage > 1){
+                recommendPage--;
+                $.post("/admin/recommend/list",{
+                    currentPage:recommendPage,
+                    pageSize:5
+                },function (data) {
+                    if(data.code == "200"){
+                        makeRecommend(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //教员下一页
+        function techerPageDown() {
+            if($("#techer_area").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            techerPage++;
+            $.post("/admin/approve/list",{
+                currentPage:techerPage,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeTecher(data.data);
+                }
+            });
+        }
+        //教员上一页
+        function techerPageUp() {
+            if(techerPage > 1){
+                techerPage--;
+                $.post("/admin/techer/list",{
+                    currentPage:techerPage,
+                    pageSize:10
+                },function (data) {
+                    if(data.code == "200"){
+                        makeTecher(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //学生下一页
+        function studentPageDown() {
+            if($("#student_area").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            studentPage++;
+            $.post("/admin/student/list",{
+                currentPage:studentPage,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeStudent(data.data);
+                }
+            });
+        }
+        //学生上一页
+        function studentPageUp() {
+            if(studentPage > 1){
+                studentPage--;
+                $.post("/admin/student/list",{
+                    currentPage:studentPage,
+                    pageSize:10
+                },function (data) {
+                    if(data.code == "200"){
+                        makeStudent(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //帖子下一页
+        function commentPageDown() {
+            if($("#comment_area").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            commentPage++;
+            $.post("/admin/comment/list",{
+                currentPage:commentPage,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeStudent(data.data);
+                }
+            });
+        }
+        //帖子上一页
+        function commentPageUp() {
+            if(commentPage > 1){
+                commentPage--;
+                $.post("/admin/comment/list",{
+                    currentPage:commentPage,
+                    pageSize:10
+                },function (data) {
+                    if(data.code == "200"){
+                        makeStudent(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        $(document).ready(function() {
+            //初始化科目多选下拉列表
+            $('#subject').multiselect();
+            //初始化授课时间多选下拉列表
+            $('#time_type').multiselect();
+            //进页面后马上获取审核教员数据
+            $.post("/admin/approve/list",{
+                currentPage:1,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeTecherApprove(data.data);
+                }
+            });
+            //进页面后马上获取审核学生数据
+            $.post("/admin/approve/student/list",{
+                currentPage:1,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeStudentApprove(data.data);
+                }
+            });
+            //进页面后马上获取推荐数据
+            $.post("/admin/recommend/list",{
+                currentPage:1,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeRecommend(data.data);
+                }
+            });
+            //进页面后马上获取教员数据
+            $.post("/admin/techer/list",{
+                currentPage:1,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeTecher(data.data);
+                }
+            });
+            //进页面后马上获取学生数据
+            $.post("/admin/student/list",{
+                currentPage:1,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeStudent(data.data);
+                }
+            });
+            //进页面后马上获取帖子数据
+            $.post("/admin/comment/list",{
+                currentPage:1,
+                pageSize:10
+            },function (data) {
+                if(data.code == "200"){
+                    makeComment(data.data);
+                }
+            });
+            //教员审核通过按钮事件
+            $("#techerApproveBtn").click(function () {
+                $.post("/admin/techer/approve",{
+                    techerId:$("#hidden_techer_id").val()
+                },function (data) {
+                    if(data.code == "200"){
+                        makeTecherApprove(data.data);
+                        $("#addUserModal").modal("hide");
+                    }
+                })
+            });
+            //学生审核通过按钮事件
+            $("#studentApproveBtn").click(function () {
+                $.post("/admin/student/approve",{
+                    studentId:$("#hidden_student_id").val()
+                },function (data) {
+                    if(data.code == "200"){
+                        makeStudentApprove(data.data);
+                        $("#studentModal").modal("hide");
+                    }
+                })
+            })
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="mycss/discuss.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li class="active"><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId == null}"><a href="/loginhtml">登录</a></li>
+            <li th:if="${userId == null}"><a href="/registerhtml"><span class="label label-info" style="font-size: 15px">注册</span></a></li>
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+    <div class="container" style="width: 70%">
+      <input id="hide_comment_id" type="hidden" th:value="${comment.commentId}"/>
+      <div id="contentArea">
+        <div class="thumbnail" style="margin-bottom: 5px;border-top: 3px solid #31b0d5">
+          <div style="text-align: center">
+            <span class="label label-info" style="font-size: 15px" th:text="${comment.userName}"></span>
+            <span th:text="${comment.createdDate}"></span>
+          </div>
+          <hr style="margin: 5px 0px">
+          <p style="border-left: 5px solid #D5D8DC" th:text="${comment.title}"></p>
+          <p style="border-left: 5px solid #D5D8DC" th:text="${comment.content}"></p>
+        </div>
+      </div>
+      <hr style="margin: 20px 0px;">
+      <div id="followArea">
+        <div th:each="follow : ${comment.follow}" class="row" style="margin-top: 10px">
+          <div class="col-sm-2" style="text-align: center;margin-top: 5px">
+            <p class="label label-info" style="font-size: 15px" th:text="${follow.userName}"></p>
+            <p style="margin-top: 5px" th:text="${follow.createdDate}"></p>
+          </div>
+          <div class="col-sm-10">
+            <div class="thumbnail" style="margin-left:-10px;margin-bottom: 5px;border: 1px solid #31b0d5">
+              <p th:text="${follow.content}"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: center;margin-top: 20px">
+        <textarea class="form-control"  name="content" id="content" placeholder="请输入好玩的内容:)"></textarea>
+        <button id="addCommentBtn" class="btn btn-info" style="margin-top: 20px">提交</button>
+      </div>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 民师家教 版权所有——找家教，来民师家教</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //构造帖子内容以及相关评论
+        function makeDetail(data) {
+            var contentHtml = "<div class=\"thumbnail\" style=\"margin-bottom: 5px;border-top: 3px solid #31b0d5\">\n" +
+                "          <div style=\"text-align: center\">\n" +
+                "            <span class=\"label label-info\" style=\"font-size: 15px\">"+data[i].userName+"</span>\n" +
+                "            <span>"+data.createdDate+"</span>\n" +
+                "          </div>\n" +
+                "          <hr style=\"margin: 5px 0px\">\n" +
+                "          <p style=\"border-left: 5px solid #D5D8DC\">"+data.title+"</p>\n" +
+                "          <p style=\"border-left: 5px solid #D5D8DC\">"+data.content+"</p>\n" +
+                "        </div>";
+            var followHtml = "";
+            for(var i = 0; i < data.follow.length; i++){
+                followHtml += "<div class=\"row\" style=\"margin-top: 10px\">\n" +
+                    "          <div class=\"col-sm-2\" style=\"text-align: center;margin-top: 5px\">\n" +
+                    "            <p class=\"label label-info\" style=\"font-size: 15px\">"+data.follow[i].userName+"</p>\n" +
+                    "            <p style=\"margin-top: 5px\">"+data.follow[i].createdDate+"</p>\n" +
+                    "          </div>\n" +
+                    "          <div class=\"col-sm-10\">\n" +
+                    "            <div class=\"thumbnail\" style=\"margin-left:-10px;margin-bottom: 5px;border: 1px solid #31b0d5\">\n" +
+                    "              <p>"+data.follow[i].content+"</p>\n" +
+                    "            </div>\n" +
+                    "          </div>\n" +
+                    "        </div>";
+            }
+            $("#contentArea").html(contentHtml);
+            $("#followArea").html(followHtml);
+        }
+        $(document).ready(function() {
+            //评论添加按钮事件
+            $("#addCommentBtn").click(function () {
+                $.post("/i/comment/follow/add",{
+                    parentCommentId: $("#hide_comment_id").val(),
+                    content:$("#content").val()
+                },function (data) {
+                    if(data.code == "200"){
+                        makeDetail(data.data);
+                    }else{
+                        alert(data.msg);
+                    }
+                })
+            })
+        })
+    </script>
+  </body>
+</html>

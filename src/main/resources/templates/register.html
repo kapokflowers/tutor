@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Custom styles for this template -->
+    <link href="mycss/register.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign up</h2>
+        <label for="user_name" class="sr-only">Email address</label>
+        <input type="text" id="user_name" class="form-control" placeholder="请输入用户名" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="请输入密码" required>
+        <label for="again_password" class="sr-only">Password Again</label>
+        <input type="password" id="again_password" class="form-control" placeholder="再次输入密码" required>
+        <div style="margin: 10px 0px;text-align: center">
+          <label class="radio-inline">
+            <input type="radio" name="optionsRadiosinline" id="student" value="3" checked>学生
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="optionsRadiosinline" id="techer"  value="2">教员
+          </label>
+        </div>
+
+        <button id="regbtn" type="button" class="btn btn-lg btn-info btn-block">注册</button>
+      </form>
+
+    </div> <!-- /container -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#regbtn").click(function () {
+          if($("#password").val() != $("#again_password").val()){
+            alert("两次输入的密码要一致");
+            return;
+          }
+          $.post("/register",{
+            userName:$("#user_name").val(),
+            pwd:$("#password").val(),
+            roleId:$("#student")[0].checked?"3":"2"
+          },function (data) {
+            if(data.code == '200'){
+              if(data.data == "techer"){
+                  window.location.href = "persontecherhtml";
+              }else if(data.data == "student"){
+                  window.location.href = "personstudenthtml";
+              }
+            }else{
+              alert("用户名已经有人占用！");
+            }
+
+          })
+
+          // $.ajax({
+          //   url:"/register",
+          //   type:"POST",
+          //   data:{
+          //     userName:$("#user_name").val(),
+          //     pwd:$("#password").val(),
+          //     roleId:$("#student").checked?"2":"3"
+          //   },
+          //   success:function (result) {
+          //     console.log(result)
+          //   },
+          //   error:function (result) {
+          //     console.log(result)
+          //   }
+          // })
+        })
+      })
+    </script>
+  </body>
+</html>

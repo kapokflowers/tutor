@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>民师家教</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+    <!-- Custom styles for this template -->
+    <link href="mycss/person_techer.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./">民师家教</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="./">首页</a></li>
+            <li><a href="./techerhtml">教员区</a></li>
+            <li><a href="./orderhtml">订单区</a></li>
+            <li><a href="./discusshtml">讨论区</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li th:if="${userId != null}"><a href="./person"><span class="label label-info" style="font-size: 15px" th:text="${userName}">UserName</span></a></li>
+            <li th:if="${isApprove != null}"><span class="label label-success" style="font-size: 10px;padding-top: 20px">审核通过</span></li>
+            <li th:if="${isApprove == null}"><span class="label label-danger" style="font-size: 10px;padding-top: 20px">审核未通过</span></li>
+            <li th:if="${userId != null}"><a href="./logout">退出</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+    <div class="container" style="width: 70%">
+      <div class="row">
+        <div class="col-sm-2" style="background-color: #eeeeee;text-align: center;border-radius: 5px">
+          <ul class="nav nav-tab vertical-tab" role="tablist" id="vtab">
+            <li role="presentation" class="active">
+              <a href="#tab1" aria-controls="home" role="tab"
+                 data-toggle="tab"><b>个人资料</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab2" aria-controls="inbox" role="tab"
+                 data-toggle="tab"><b>我的预约</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab3" aria-controls="inbox" role="tab"
+                 data-toggle="tab"><b>我的订单</b></a>
+            </li>
+            <li role="presentation">
+              <a href="#tab4" aria-controls="inbox" role="tab"
+                 data-toggle="tab"><b>我的收藏</b></a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-10 tab-content vertical-tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab1">
+              <label for="headpic_upload_input" class="control-label" style="margin-top:10px;padding-top: 3px">个人头像</label>
+              <input id="headpic_upload_input" type="file" accept="image/*"/>
+              <div id="headpic_preview_box">
+                <img class="preview" style="max-width: 200px" src="/getPhoto?imageType=1" alt="preview" onerror="javascript:this.src='/img/head-pic.jpeg'"/>
+              </div>
+              <label for="techer_name" class="control-label" style="margin-top:10px;padding-top: 3px">姓名</label>
+              <input id="techer_name" class="form-control" type="text"></input>
+              <label for="sex" class="control-label" style="margin-top:10px;padding-top: 3px">性别</label>
+              <select id="sex" class="form-control">
+                <option value="1">男</option>
+                <option value="2">女</option>
+              </select>
+              <label for="edu_level" class="control-label" style="margin-top:10px;padding-top: 3px">学历</label>
+              <select id="edu_level" class="form-control">
+                <option value="4">本科</option>
+                <option value="1">博士后</option>
+                <option value="2">博士</option>
+                <option value="3">硕士</option>
+                <option value="5">高中</option>
+                <option value="6">初中</option>
+                <option value="7">小学</option>
+              </select>
+              <label for="edu_th" class="control-label" style="margin-top:10px;padding-top: 3px">入学年份(如2018)</label>
+              <input id="edu_th" class="form-control" type="text"></input>
+              <label for="institute" class="control-label" style="margin-top:10px;padding-top: 3px">学院</label>
+              <select id="institute" class="form-control">
+                <option value="">---请选择---</option>
+                <option th:each="institute : ${instituteList}" th:value="${institute.instituteId}" th:text="${institute.instituteName}">1</option>
+              </select>
+              <label for="phone" class="control-label" style="margin-top:10px;padding-top: 3px">手机号码</label>
+              <input id="phone" class="form-control" type="text"></input>
+              <div>
+                <label for="subject" class="control-label" style="margin-top:10px;padding-top: 3px">辅导课程</label>
+                <div>
+                  <select id="subject" class="form-control" multiple="multiple">
+                    <option th:each="subject : ${subjectList}" th:value="${subject.subjectId}" th:text="${subject.subjectName}"></option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label for="grade" class="control-label" style="margin-top:10px;padding-top: 3px">辅导年级</label>
+                <div>
+                  <select id="grade" class="form-control" multiple="multiple">
+                    <option th:each="grade : ${gradeList}" th:value="${grade.gradeId}" th:text="${grade.gradeDesc}"></option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label for="time_type" class="control-label" style="margin-top:10px;padding-top: 3px">辅导时间</label>
+                <div>
+                  <select id="time_type" class="form-control" multiple="multiple">
+                    <option th:each="timetype : ${timeTypeList}" th:value="${timetype.timeTypeId}" th:text="${timetype.timeTypeDesc}"></option>
+                  </select>
+                </div>
+              </div>
+              <label for="intro" class="control-label" style="margin-top:10px;padding-top: 3px">个人履历</label>
+              <textarea id="intro" class="form-control"></textarea>
+              <label for="exp" class="control-label" style="margin-top:10px;padding-top: 3px">教学经验</label>
+              <textarea id="exp" class="form-control"></textarea>
+              <label for="self_comment" class="control-label" style="margin-top:10px;padding-top: 3px">我的宣言</label>
+              <input id="self_comment" class="form-control" type="text"></input>
+              <label for="id_upload_input" class="control-label" style="margin-top:10px;padding-top: 3px">身份证</label>
+              <input id="id_upload_input" type="file">
+              <div id="id_preview_box">
+                <img class="preview" style="max-width: 500px" src="/getPhoto?imageType=2" alt="preview" onerror="javascript:this.src='/img/id-card.png'"/>
+              </div>
+              <label for="id_student_upload_input" class="control-label" style="margin-top:10px;padding-top: 3px">学生证</label>
+              <input id="id_student_upload_input" type="file">
+              <div id="id_student_preview_box">
+                <img class="preview" style="max-width: 500px" src="/getPhoto?imageType=3" alt="preview" onerror="javascript:this.src='/img/id-card.png'"/>
+              </div>
+              <hr>
+              <div style="text-align: center;margin: 20px 0px">
+                <button id="infoSaveBtn" class="btn btn-info">保存</button>
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab2">
+              <div id="dateArea" style="margin-top: 10px">
+              </div>
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="datePageUp()">上一页</a></li>
+                  <li><a href="#" onclick="datePageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab3">
+              <div id="orderArea" style="margin-top: 10px">
+              </div>
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="orderPageUp()">上一页</a></li>
+                  <li><a href="#" onclick="orderPageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab4">
+              <div id="collectArea" style="margin-top: 10px">
+
+              </div>
+
+              <nav aria-label="...">
+                <ul class="pager">
+                  <li><a href="#" onclick="collectPageUp()">上一页</a></li>
+                  <li><a href="#" onclick="collectPageDown()">下一页</a></li>
+                </ul>
+              </nav>
+            </div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 民师家教 版权所有——找家教，来民师家教</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">
+        //当前收藏页码
+        var collectPage = 1;
+        //当前已完成订单页码
+        var orderPage = 1;
+        //当前预约页码
+        var datePage = 1;
+        //根据数据构造预约订单列表
+        function makeDate(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+                var subjectHtml = "";
+                var timeTypeHtml = "";
+                if (data[i].eduOrder.subjectList != null) {
+                    for (var j = 0; j < data[i].eduOrder.subjectList.length; j++) {
+                        subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].eduOrder.subjectList[j].subjectName + "</span>"
+                    }
+                }
+                if (data[i].eduOrder.timeTypeList != null) {
+                    for (var j = 0; j < data[i].eduOrder.timeTypeList.length; j++) {
+                        timeTypeHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].eduOrder.timeTypeList[j].timeTypeDesc + "</span>"
+                    }
+                }
+                html += "<div class=\"thumbnail\" >\n" +
+                    "                  <div class=\"row\" style=\"background-color: #eee; margin: -5px -5px;padding-top: 10px\">\n" +
+                    "                    <div class=\"col-sm-6\" style=\"text-align: left\">\n" +
+                    "                      <p>订单号：<span>"+data[i].orderId+"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-6\" style=\"text-align: right\">\n" +
+                    "                      <p>"+data[i].eduOrder.createdDate+"</p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                  <hr style=\"margin: 0px 0px 10px 0px\">\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                    <div class=\"col-sm-6\">\n" +
+                    "                      <p>学生性别：<span>"+data[i].eduOrder.studentSexDesc+"</span></p>\n" +
+                    "                      <p>学生年级：<span>"+data[i].eduOrder.gradeName+"</span></p>\n" +
+                    "                      <p>辅导学科：\n" + subjectHtml +
+                    "                      </p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-6\">\n" +
+                    "                      <p>教员性别：<span>"+data[i].eduOrder.techerSexDesc+"</span></p>\n" +
+                    "                      <p>授课地址：<span>"+data[i].eduOrder.address+"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                  <hr style=\"margin: 5px 0\">\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                    <div class=\"col-sm-10\">\n" +
+                    "                      <p>期望辅导时间：\n" + timeTypeHtml +
+                    "                      </p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-2\">\n" +
+                    "                      <p>状态:<span class=\"label label-info\">"+data[i].statusDesc+"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                </div>";
+            }
+            $("#dateArea").html(html);
+        }
+        //根据数据构造已完成订单列表
+        function makeOrder(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+                var subjectHtml = "";
+                var timeTypeHtml = "";
+                if (data[i].subjectList != null) {
+                    for (var j = 0; j < data[i].subjectList.length; j++) {
+                        subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].subjectList[j].subjectName + "</span>"
+                    }
+                }
+                if (data[i].timeTypeList != null) {
+                    for (var j = 0; j < data[i].timeTypeList.length; j++) {
+                        timeTypeHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].timeTypeList[j].timeTypeDesc + "</span>"
+                    }
+                }
+                html += "<div class=\"thumbnail\" >\n" +
+                    "                  <div class=\"row\" style=\"background-color: #eee; margin: -5px -5px;padding-top: 10px\">\n" +
+                    "                    <div class=\"col-sm-6\" style=\"text-align: left\">\n" +
+                    "                      <p>订单号：<span>"+data[i].orderId+"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-6\" style=\"text-align: right\">\n" +
+                    "                      <p>"+data[i].createdDate+"</p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                  <hr style=\"margin: 0px 0px 10px 0px\">\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                    <div class=\"col-sm-6\">\n" +
+                    "                      <p>学生性别：<span>"+data[i].studentSexDesc+"</span></p>\n" +
+                    "                      <p>学生年级：<span>"+data[i].gradeName+"</span></p>\n" +
+                    "                      <p>辅导学科：\n" + subjectHtml +
+                    "                      </p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-6\">\n" +
+                    "                      <p>教员性别：<span>"+data[i].techerSexDesc+"</span></p>\n" +
+                    "                      <p>授课地址：<span>"+data[i].address+"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                    <div class=\"col-sm-12\">\n" +
+                    "                      <p>期望辅导时间：\n" + timeTypeHtml+
+                    "                      </p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                  <hr style=\"margin: 5px 0\">\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                      <p class=\"col-sm-3\">客户评分:<span style=\"margin-left: 20px\"><b>"+data[i].techerScore+"</b></span></p>\n" +
+                    "                      <p class=\"col-sm-9\">客户评价:<span style=\"margin-left: 20px\"><b>"+data[i].techerComment+"</b></span></p>\n" +
+                    "                  </div>\n" +
+                    "                </div>";
+            }
+            $("#orderArea").html(html);
+        }
+        //根据数据构造收藏列表
+        function makeCollect(data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++){
+                var subjectHtml = "";
+                var timeTypeHtml = "";
+                if(data[i].subjectList != null){
+                    for(var j = 0; j < data[i].subjectList.length; j++){
+                        subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">"+data[i].subjectList[j].subjectName+"</span>"
+                    }
+                }
+                if(data[i].timeTypeList != null){
+                    for(var j = 0; j < data[i].timeTypeList.length; j++){
+                        timeTypeHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">"+data[i].timeTypeList[j].timeTypeDesc+"</span>"
+                    }
+                }
+                html += "<div class=\"thumbnail\" >\n" +
+                    "                  <div class=\"row\" style=\"background-color: #eee; margin: -5px -5px;padding-top: 10px\">\n" +
+                    "                    <div class=\"col-sm-6\" style=\"text-align: left\">\n" +
+                    "                      <p>学生ID：<span>"+data[i].studentId+"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-6\" style=\"text-align: right\">\n" +
+                    "                      <p><a href=\"#\" onclick='delCollect("+data[i].orderId+")'>取消收藏</a></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                  <hr style=\"margin: 0px 0px 10px 0px\">\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                    <div class=\"col-sm-6\">\n" +
+                    "                      <p>学生性别：<span>"+data[i].studentSexDesc+"</span></p>\n" +
+                    "                      <p>学生年级：<span>"+data[i].gradeName+"</span></p>\n" +
+                    "                      <p>辅导学科：\n" + subjectHtml +
+                    "                      </p>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"col-sm-6\">\n" +
+                    "                      <p>教员性别：<span>"+ data[i].techerSexDesc +"</span></p>\n" +
+                    "                      <p>授课地址：<span>"+ data[i].address +"</span></p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                  <div class=\"row\">\n" +
+                    "                    <div class=\"col-sm-12\">\n" +
+                    "                      <p>期望辅导时间：\n" + timeTypeHtml +
+                    "                      </p>\n" +
+                    "                    </div>\n" +
+                    "                  </div>\n" +
+                    "                </div>";
+            }
+            $("#collectArea").html(html);
+        }
+        //获取当前科目列表选中值
+        function getSubject() {
+            var selected = "";
+            $('#subject option:selected').each(function () {
+                selected+=$(this).val()+",";
+            });
+            return selected;
+        }
+        //获取当前辅导年级列表选中值
+        function getGrade() {
+            var selected = "";
+            $('#grade option:selected').each(function () {
+                selected+=$(this).val()+",";
+            });
+            return selected;
+        }
+        //获取当前授课时间列表选中值
+        function getTimeType() {
+            var selected = "";
+            $('#time_type option:selected').each(function () {
+                selected+=$(this).val()+",";
+            });
+            return selected;
+        }
+        //删除收藏
+        function delCollect(orderId) {
+            $.post("/techer/collect/delete",{orderId:orderId},function (data) {
+                if(data.code == "200"){
+                    makeCollect(data.data);
+                }
+            })
+        }
+        //收藏下一页
+        function collectPageDown() {
+            if($("#collectArea").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            collectPage++;
+            $.post("/techer/collect/list",{
+                currentPage:collectPage,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeCollect(data.data);
+                }
+            });
+        }
+        //收藏上一页
+        function collectPageUp() {
+            if(collectPage > 1){
+                collectPage--;
+                $.post("/techer/collect/list",{
+                    currentPage:collectPage,
+                    pageSize:5
+                },function (data) {
+                    if(data.code == "200"){
+                        makeCollect(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //我的订单下一页
+        function orderPageDown() {
+            if($("#orderArea").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            orderPage++;
+            $.post("/techer/order/list",{
+                currentPage:orderPage,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeOrder(data.data);
+                }
+            });
+        }
+        //我的订单上一页
+        function orderPageUp() {
+            if(orderPage > 1){
+                orderPage--;
+                $.post("/techer/order/list",{
+                    currentPage:orderPage,
+                    pageSize:5
+                },function (data) {
+                    if(data.code == "200"){
+                        makeOrder(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        //我的预约下一页
+        function datePageDown() {
+            if($("#dateArea").children().length < 5){
+                alert("客官，无更多记录啦。。。");
+                return;
+            }
+            datePage++;
+            $.post("/techer/date/list",{
+                currentPage:datePage,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeDate(data.data);
+                }
+            });
+        }
+        //我的预约上一页
+        function datePageUp() {
+            if(datePage > 1){
+                datePage--;
+                $.post("/techer/date/list",{
+                    currentPage:datePage,
+                    pageSize:5
+                },function (data) {
+                    if(data.code == "200"){
+                        makeDate(data.data);
+                    }
+                });
+            }else{
+                alert("客官，无更多记录啦。。。");
+            }
+        }
+        $(document).ready(function() {
+            //年级下拉列表初始化
+            $('#grade').multiselect({nonSelectedText: '--请选择--'});
+            //科目下拉列表初始化
+            $('#subject').multiselect({nonSelectedText: '--请选择--'});
+            //授课时间下拉列表初始化
+            $('#time_type').multiselect({nonSelectedText: '--请选择--'});
+            //头像上传
+            $("#headpic_upload_input").on("change", function(e) {
+                var file = e.target.files[0]; //获取图片资源
+                // 只选择图片文件
+                if (!file.type.match('image.*')) {
+                    return false;
+                }
+                var reader = new FileReader();
+                reader.readAsDataURL(file); // 读取文件
+                // 渲染文件
+                reader.onload = function(arg) {
+                    var img = '<img class="preview" style="max-width: 200px" src="' + arg.target.result + '" alt="preview"/>';
+                    $("#headpic_preview_box").empty().append(img);
+                }
+                //上传文件
+                var form_data = new FormData();
+                var file_data = $("#headpic_upload_input").prop("files")[0];
+
+                // 把上传的数据放入form_data
+                form_data.append("file", file_data);
+
+                $.ajax({
+                    type: "POST", // 上传文件要用POST
+                    url: "/common/headpic/upload",
+                    dataType : "json",
+                    crossDomain: true, // 如果用到跨域，需要后台开启CORS
+                    processData: false,  // 注意：不要 process data
+                    contentType: false,  // 注意：不设置 contentType
+                    data: form_data
+                }).success(function(data) {
+                    console.log(data);
+                }).fail(function(data) {
+                    console.log(data);
+                });
+            });
+            //身份证上传
+            $("#id_student_upload_input").on("change", function(e) {
+                var file = e.target.files[0]; //获取图片资源
+                // 只选择图片文件
+                if (!file.type.match('image.*')) {
+                    return false;
+                }
+                var reader = new FileReader();
+                reader.readAsDataURL(file); // 读取文件
+                // 渲染文件
+                reader.onload = function(arg) {
+                    var img = '<img class="preview" style="max-width: 500px" src="' + arg.target.result + '" alt="preview"/>';
+                    $("#id_student_preview_box").empty().append(img);
+                }
+                //上传文件
+                var form_data = new FormData();
+                var file_data = $("#id_student_upload_input").prop("files")[0];
+
+                // 把上传的数据放入form_data
+                form_data.append("file", file_data);
+
+                $.ajax({
+                    type: "POST", // 上传文件要用POST
+                    url: "/common/idstudent/upload",
+                    dataType : "json",
+                    crossDomain: true, // 如果用到跨域，需要后台开启CORS
+                    processData: false,  // 注意：不要 process data
+                    contentType: false,  // 注意：不设置 contentType
+                    data: form_data
+                }).success(function(data) {
+                    console.log(data);
+                }).fail(function(data) {
+                    console.log(data);
+                });
+            });
+            //学生证上传
+            $("#id_upload_input").on("change", function(e) {
+                var file = e.target.files[0]; //获取图片资源
+                // 只选择图片文件
+                if (!file.type.match('image.*')) {
+                    return false;
+                }
+                var reader = new FileReader();
+                reader.readAsDataURL(file); // 读取文件
+                // 渲染文件
+                reader.onload = function(arg) {
+                    var img = '<img class="preview" style="max-width: 500px" src="' + arg.target.result + '" alt="preview"/>';
+                    $("#id_preview_box").empty().append(img);
+                }
+                //上传文件
+                var form_data = new FormData();
+                var file_data = $("#id_upload_input").prop("files")[0];
+
+                // 把上传的数据放入form_data
+                form_data.append("file", file_data);
+
+                $.ajax({
+                    type: "POST", // 上传文件要用POST
+                    url: "/common/id/upload",
+                    dataType : "json",
+                    crossDomain: true, // 如果用到跨域，需要后台开启CORS
+                    processData: false,  // 注意：不要 process data
+                    contentType: false,  // 注意：不设置 contentType
+                    data: form_data
+                }).success(function(data) {
+                    console.log(data);
+                }).fail(function(data) {
+                    console.log(data);
+                });
+            });
+            //获取教员资料
+            $.post("/techer/info/get",{},function (data) {
+                if(data.code == "400"){
+                    alert("请完善个人资料")
+                }else if(data.code == "200"){
+                    $("#sex").val(data.data.techerSex);
+                    $("#techer_name").val(data.data.techerName);
+                    $("#edu_level").val(data.data.eduLevelId);
+                    $("#edu_th").val(data.data.eduThId);
+                    $("#institute").val(data.data.instituteId);
+                    $("#phone").val(data.data.phone);
+                    if(data.data.gradeId != null){
+                        $("#grade").multiselect('select',data.data.gradeId.split(","));
+                    }
+                    if(data.data.subjectId != null){
+                        $("#subject").multiselect('select',data.data.subjectId.split(","));
+                    }
+                    if(data.data.timeTypeId != null){
+                        $("#time_type").multiselect('select',data.data.timeTypeId.split(","));
+                    }
+                    $("#intro").val(data.data.intro);
+                    $("#exp").val(data.data.exp);
+                    $("#self_comment").val(data.data.selfComment);
+                }
+            });
+            //获取教员收藏列表
+            $.post("/techer/collect/list",{
+                currentPage:1,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeCollect(data.data);
+                }
+            });
+            //获取教员已完成订单列表
+            $.post("/techer/order/list",{
+                currentPage:1,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeOrder(data.data);
+                }
+            });
+            //获取教员预约列表
+            $.post("/techer/date/list",{
+                currentPage:1,
+                pageSize:5
+            },function (data) {
+                if(data.code == "200"){
+                    makeDate(data.data);
+                }
+            });
+            //教员资料保存
+            $("#infoSaveBtn").click(function () {
+                $.post("/techer/info/save",{
+                    techerSex:$("#sex").val(),
+                    techerName:$("#techer_name").val(),
+                    eduLevelId:$("#edu_level").val(),
+                    eduThId:$("#edu_th").val(),
+                    instituteId:$("#institute").val(),
+                    phone:$("#phone").val(),
+                    subjectId:getSubject(),
+                    gradeId:getGrade(),
+                    timeTypeId:getTimeType(),
+                    intro:$("#intro").val(),
+                    exp:$("#exp").val(),
+                    selfComment:$("#self_comment").val()
+                },function (data) {
+                    alert(data.msg);
+                })
+            })
+        });
+    </script>
+  </body>
+</html>
