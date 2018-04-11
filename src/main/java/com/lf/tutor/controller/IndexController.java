@@ -199,6 +199,14 @@ public class IndexController {
             return model;
         }else if(user.getRoleId().equals(NormalCfg.TECHER)){
             model.setViewName("person_techer");
+            Techer techer = techerService.getTecherById(userId);
+            if(techer != null){
+                if("Y".equals(techer.getIsApprove())){
+                    model.addObject("isApprove","Y");
+                }else{
+                    model.addObject("isApprove",null);
+                }
+            }
             model.addObject("userId",userId);
             model.addObject("gradeList", commonService.getGradeList());
             model.addObject("userName",userService.getUserById(userId).getUserName());
@@ -208,6 +216,14 @@ public class IndexController {
             return model;
         }else if(user.getRoleId().equals(NormalCfg.STUDENT)){
             model.setViewName("person_student");
+            Student  student = studentService.getStudentById(userId);
+            if(student != null){
+                if("Y".equals(student.getIsApprove())){
+                    model.addObject("isApprove","Y");
+                }else{
+                    model.addObject("isApprove",null);
+                }
+            }
             model.addObject("userId",userId);
             model.addObject("userName",userService.getUserById(userId).getUserName());
             model.addObject("gradeList", commonService.getGradeList());
@@ -381,8 +397,8 @@ public class IndexController {
         model.setViewName("/order_detail");
         String userId = String.valueOf(request.getSession().getAttribute("userid"));
         if(userId == null|| userId.equals("null")){
-            model.addObject("userId",userId);
-            model.addObject("userName",userService.getUserById(userId).getUserName());
+//            model.addObject("userId",userId);
+//            model.addObject("userName",userService.getUserById(userId).getUserName());
             model.setViewName("forbid");
             return model;
         }
@@ -410,8 +426,8 @@ public class IndexController {
         model.setViewName("/recommend");
         String userId = String.valueOf(request.getSession().getAttribute("userid"));
         if(userId == null|| userId.equals("null")){
-            model.addObject("userId",userId);
-            model.addObject("userName",userService.getUserById(userId).getUserName());
+//            model.addObject("userId",userId);
+//            model.addObject("userName",userService.getUserById(userId).getUserName());
             model.setViewName("forbid");
             return model;
         }

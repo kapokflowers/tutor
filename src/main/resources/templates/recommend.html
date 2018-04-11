@@ -154,15 +154,17 @@
         }
         //选择某个教员作为订单的教员
         function accept(techerId) {
-            $.post("/admin/recommend/accept",{
-                techerId:techerId,
-                orderId:$("#hidden_order_id").val()
-            },function (data) {
-                alert(data.msg+",1s后关闭");
-                window.setTimeout(function () {
-                    window.close();
-                },1000)
-            })
+            if(confirm("确定要选Ta作为推荐教员吗？")){
+                $.post("/admin/recommend/accept",{
+                    techerId:techerId,
+                    orderId:$("#hidden_order_id").val()
+                },function (data) {
+                    alert(data.msg+",1s后关闭");
+                    window.setTimeout(function () {
+                        window.close();
+                    },1000)
+                })
+            }
         }
         $(document).ready(function() {
             //获取推荐教员

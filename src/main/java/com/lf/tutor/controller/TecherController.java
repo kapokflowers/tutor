@@ -218,7 +218,7 @@ public class TecherController {
      * @param pageSize
      * @return
      */
-    @RequestMapping("/techer/order/list")
+    @RequestMapping("/techer/order/list")//请求的路由，shift+ctrl+f可查看
     public ResultDTO getOrder(HttpServletRequest request,int currentPage,int pageSize){
         String uId = String.valueOf(request.getSession().getAttribute("userid"));
         ResultDTO resultDTO = null;

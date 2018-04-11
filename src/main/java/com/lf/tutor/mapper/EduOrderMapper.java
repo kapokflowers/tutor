@@ -70,6 +70,7 @@ public interface EduOrderMapper {
             "techer_comment=#{techerComment}," +
             "is_valid=#{isValid}," +
             "is_recommend=#{isRecommend}," +
+            "wx_order_id=#{wxOrderId}," +
             "updated_date=now()" +
             " where order_id = #{orderId} and is_valid = 'Y'")
     void update(EduOrder eduOrder);

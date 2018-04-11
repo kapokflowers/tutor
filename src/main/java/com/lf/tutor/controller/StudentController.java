@@ -535,7 +535,7 @@ public class StudentController {
      * @return
      */
     @RequestMapping("/student/recommend/add")
-    public ResultDTO getRecommend(HttpServletRequest request,String orderId){
+    public ResultDTO getRecommend(HttpServletRequest request,String orderId,String wxOrderId){
         String uId = String.valueOf(request.getSession().getAttribute("userid"));
         ResultDTO resultDTO = null;
         if (uId == null || uId.equals("null")) {
@@ -546,6 +546,7 @@ public class StudentController {
         }
         EduOrder order = eduOrderService.getEduById(orderId);
         order.setIsRecommend("Y");
+        order.setWxOrderId(wxOrderId);
         eduOrderService.update(order);
 
         EduOrder temp = new EduOrder();

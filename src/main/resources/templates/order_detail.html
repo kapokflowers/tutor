@@ -70,6 +70,10 @@
             for(var i = 0; i < data.length; i++) {
                 var subjectHtml = "";
                 var gradeHtml = "";
+                var commendHtml = "";
+                if(data[i].isRecommend == 'Y'){
+                    commendHtml = "<span class='label label-danger' style='margin-right: 10px'>管理员推荐</span>"
+                }
                 if (data[i].subjectList != null) {
                     for (var j = 0; j < data[i].subjectList.length; j++) {
                         subjectHtml += "<span class=\"label label-info\" style=\"margin-left: 3px\">" + data[i].subjectList[j].subjectName + "</span>"
@@ -81,14 +85,15 @@
                     }
                 }
                 html += "<div class=\"thumbnail\" style=\"border-left: 3px solid #31b0d5\">\n" +
-                    "        <a href=\"#\" onclick=\"techerDetail("+data[i].techerId+")\" class=\"\">\n" +
+
                     "          <div class=\"row\">\n" +
                     "            <div class=\"col-sm-2 text-center\">\n" +
-                    "              <img src=\"img/test_hp.jpg\" style=\"max-height:100px\">\n" +
+                    "              <img src=\""+data[i].headImg+"\" style=\"max-height:100px\">\n" +
                     "              <p style=\"margin-bottom: 5px\">ID:"+data[i].techerId+"</p>\n" +
                     "              <p style=\"margin-bottom: 5px\">"+data[i].techerLevelDesc+"</p>\n" +
                     "              <button class=\"accept-btn btn btn-info\" onclick=\"accept("+data[i].techerId+")\">接受并试课</button>\n" +
                     "            </div>\n" +
+                    "        <a href=\"#\" onclick=\"techerDetail("+data[i].techerId+")\" class=\"\">\n" +
                     "            <div class=\"col-sm-10\">\n" +
                     "              <p>\n" +
                     "                <span style=\"font-size: 20px\">"+data[i].techerName+"</span>\n" +
@@ -96,7 +101,7 @@
                     "                <span style=\"margin-left:100px\">"+data[i].selfComment+"</span>\n" +
                     "                <span class=\"accept-label label label-success\" style=\"margin-left:100px\">"+data[i].statusDesc+"</span>\n" +
                     "              </p>\n" +
-                    "              <p>"+data[i].eduThId+"级——"+data[i].eduLevelDesc+"——"+data[i].instituteDesc+"</p>\n" +
+                    "              <p>"+commendHtml+data[i].eduThId+"级——"+data[i].eduLevelDesc+"——"+data[i].instituteDesc+"</p>\n" +
                     "              <hr>\n" +
                     "              <div class=\"row\">\n" +
                     "                <div class=\"col-sm-6 text-center\">\n" +
@@ -119,16 +124,20 @@
         }
         //设置某个教员为订单的教员
         function accept(techerId) {
-            $.post("/student/order/accept",{
-                techerId:techerId,
-                orderId:$("#hidden_order_id").val()
-            },function (data) {
-                if(data.code == "200"){
-                    makeContent(data.data);
-                    $("#hidden_flag").val("1");
-                    chanage();
-                }
-            })
+            if(confirm("确定要选择Ta作为您的教员吗？")){
+                $.post("/student/order/accept",{
+                    techerId:techerId,
+                    orderId:$("#hidden_order_id").val()
+                },function (data) {
+                    if(data.code == "200"){
+                        // makeContent(data.data);
+                        // $("#hidden_flag").val("1");
+                        // chanage();
+                        alert("完成");
+                        window.close();
+                    }
+                })
+            }
         }
         //根据订单状态更改页面状态
         function chanage() {

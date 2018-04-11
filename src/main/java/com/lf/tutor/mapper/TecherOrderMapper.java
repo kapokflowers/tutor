@@ -21,8 +21,8 @@ public interface TecherOrderMapper {
      * 新增教员订单
      * @param techerCollect
      */
-    @Insert("insert into techer_order(techer_id,order_id,is_valid,created_date,updated_date,status) values (" +
-            "#{techerId},#{orderId},'Y',now(),now(),'Z')")
+    @Insert("insert into techer_order(techer_id,order_id,is_valid,created_date,updated_date,status,is_recommend) values (" +
+            "#{techerId},#{orderId},'Y',now(),now(),'Z',#{isRecommend})")
     void insert(TecherOrder techerCollect);
 
     /**
@@ -55,14 +55,14 @@ public interface TecherOrderMapper {
      * @param orderId
      * @return
      */
-    @Select("select t.*, t1.status status from techer_order t1, techer t where t.techer_id = t1.techer_id and t1.order_id = #{orderId} and t1.is_valid='Y'")
+    @Select("select t.*, t1.status status, t1.is_recommend isRecommend from techer_order t1, techer t where t.techer_id = t1.techer_id and t1.order_id = #{orderId} and t1.is_valid='Y'")
     List<Techer> getTecherByOrderId(String orderId);
 
     /**
      * 更新教员订单信息
      * @param techerCollect
      */
-    @Update("update techer_order set is_valid = #{isValid},status=#{status} where techer_id=#{techerId} and order_id=#{orderId}")
+    @Update("update techer_order set is_valid = #{isValid},status=#{status},is_recommend=#{isRecommend} where techer_id=#{techerId} and order_id=#{orderId}")
     void update(TecherOrder techerCollect);
 
     /**

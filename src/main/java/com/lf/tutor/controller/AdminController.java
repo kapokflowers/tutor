@@ -28,6 +28,8 @@ public class AdminController {
     private CommentService commentService;
     @Autowired
     private EduOrderService eduOrderService;
+    @Autowired
+    private TecherOrderService techerOrderService;
 
 
     /**
@@ -290,15 +292,16 @@ public class AdminController {
         }
         //获取教员信息以及订单信息
         EduOrder order = eduOrderService.getEduById(orderId);
-        Techer techer = techerService.getTecherById(techerId);
         //用教员信息更新订单中的教员信息
-        order.setTecherId(Integer.valueOf(techerId));
-        order.setStatus("S");
         order.setIsRecommend("N");
-        order.setTecherSex(techer.getTecherSex());
-
         eduOrderService.update(order);
 
+        TecherOrder techerOrder = new TecherOrder();
+        techerOrder.setOrderId(Integer.valueOf(orderId));
+        techerOrder.setTecherId(Integer.valueOf(techerId));
+        techerOrder.setStatus("Z");
+        techerOrder.setIsRecommend("Y");
+        techerOrderService.insert(techerOrder);
         return resultDTO;
     }
 }

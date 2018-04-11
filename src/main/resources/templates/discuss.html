@@ -181,6 +181,7 @@
                 },function (data) {
                     if(data.code == "200"){
                       makeDiscuss(data.data);
+                      $("#addCommentModal").modal("hide");
                     }else{
                         alert(data.msg);
                     }

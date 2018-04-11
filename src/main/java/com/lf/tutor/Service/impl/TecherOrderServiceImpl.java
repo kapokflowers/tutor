@@ -43,7 +43,55 @@ public class TecherOrderServiceImpl implements TecherOrderService {
 
     @Override
     public List<Techer> getTecherByOrderId(String orderId) {
-        return techerOrderMapper.getTecherByOrderId(orderId);
+        List<Techer> result = techerOrderMapper.getTecherByOrderId(orderId);
+        for(int i = 0; i < result.size(); i++){
+            result.get(i).setInstituteDesc(commonService.getInstituteById(result.get(i).getInstituteId()).getInstituteName());
+            if(result.get(i).getGradeId() != null){
+                //构建年级信息
+                String[] gradeStrList = result.get(i).getGradeId().split(",");
+                List<Grade> gradeList = new ArrayList<Grade>();
+                for(int j = 0; j < gradeStrList.length; j++){
+                    Grade grade = commonService.getGradeById(gradeStrList[j]);
+                    gradeList.add(grade);
+                }
+                if(gradeList.size() == 0){
+                    result.get(i).setGradeList(null);
+                }else{
+                    result.get(i).setGradeList(gradeList);
+                }
+            }
+            if(result.get(i).getSubjectId() != null){
+                //构建科目信息
+                String[] subjectStrList = result.get(i).getSubjectId().split(",");
+                List<Subject> subjectList = new ArrayList<Subject>();
+                for(int j = 0; j < subjectStrList.length; j++){
+                    Subject subject = commonService.getSubjectById(subjectStrList[j]);
+                    subjectList.add(subject);
+                }
+                if(subjectList.size() == 0){
+                    result.get(i).setSubjectList(null);
+                }else{
+                    result.get(i).setSubjectList(subjectList);
+                }
+            }
+            if(result.get(i).getTimeTypeId() != null){
+                //构建授课时间信息
+                String[] timeTypeStrList = result.get(i).getTimeTypeId().split(",");
+                List<TimeType> timeTypeList = new ArrayList<TimeType>();
+                for(int j = 0; j < timeTypeStrList.length; j++){
+                    TimeType timeType = commonService.getTimeTypeById(timeTypeStrList[j]);
+                    timeTypeList.add(timeType);
+                }
+                if(timeTypeList.size() == 0){
+                    result.get(i).setTimeTypeList(null);
+                }else{
+                    result.get(i).setTimeTypeList(timeTypeList);
+                }
+            }
+            //设置头像请求路径
+            result.get(i).setHeadImg("./getPhoto?imageType=1&uId="+result.get(i).getTecherId());
+        }
+        return result;
     }
 
     @Override

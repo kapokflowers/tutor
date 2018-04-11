@@ -49,6 +49,7 @@ public class DiscussController {
             resultDTO.setMsg("请先登录");
             return resultDTO;
         }
+        comment.setUserId(userId);
         commentService.insert(comment);
         resultDTO.setData(commentService.getCommentList(1,10));
         return resultDTO;

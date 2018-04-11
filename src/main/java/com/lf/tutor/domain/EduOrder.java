@@ -36,6 +36,15 @@ public class EduOrder {
     private String techerName;
     private String studentName;
     private String isRecommend;
+    private String wxOrderId;
+
+    public String getWxOrderId() {
+        return wxOrderId;
+    }
+
+    public void setWxOrderId(String wxOrderId) {
+        this.wxOrderId = wxOrderId;
+    }
 
     public String getStudentName() {
         return studentName;

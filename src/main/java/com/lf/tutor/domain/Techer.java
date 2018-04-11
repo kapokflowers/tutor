@@ -40,6 +40,15 @@ public class Techer {
     private String statusDesc;
     private String idImg;
     private String sIdImg;
+    private String isRecommend;
+
+    public String getIsRecommend() {
+        return isRecommend;
+    }
+
+    public void setIsRecommend(String isRecommend) {
+        this.isRecommend = isRecommend;
+    }
 
     public String getIdImg() {
         return idImg;

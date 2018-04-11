@@ -14,6 +14,19 @@ public class TecherOrder {
     private String createdDate;
     private String updatedDate;
     private EduOrder eduOrder;
+    private String isRecommend;
+
+    public TecherOrder(){
+        this.isRecommend = "N";
+    }
+
+    public String getIsRecommend() {
+        return isRecommend;
+    }
+
+    public void setIsRecommend(String isRecommend) {
+        this.isRecommend = isRecommend;
+    }
 
     public String getStatusDesc() {
         return statusDesc;
